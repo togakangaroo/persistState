@@ -54,17 +54,22 @@ $.widget('ow.persistState', {
         $(window)[onOff]('unload', this._boundPersist);                //when trying to unload the page
         this.element[onOff]('change', this._boundPersist);
     }
+    // Get the key under which this element would be stored. By default calls the internal getPath function
+    // override this function to provide your own getPath implementation
     ,key: function() {
         return getPath(this.element);
     }
+    //Persist state for this control now
     ,persist: function() {
         for(var serializers = this._elementSerializers(), i=serializers.length-1; i>=0; i-=1)
             this._save( serializers[i] );
     }
+    //Restore state of this control now
     ,restore: function() {
         for(var serializers = this._elementSerializers(), i=serializers.length-1; i>=0; i-=1)
             this._restore( serializers[i] );
     }
+    //Clear all stored state by removing window unlowad events
     ,clear: function() {
         for(var serializers = this._elementSerializers(), i=serializers.length-1; i>=0; i-=1)
             this._clear( serializers[i] );
@@ -108,8 +113,7 @@ $.widget('ow.persistState', {
 //How the state object for each control is stored. 
 //Default implementation is localStorage keyed by url. Overwrite this object to use a different state persistence mechanism.
 $.ow.persistState.getStates = function(localStoreKey) {
-    var  storageKey = "ow.persistState: "+localStoreKey
-        ,stateRoot  = JSON.parse(localStorage[localStoreKey]||'{}')||{}
+    var  stateRoot  = JSON.parse(localStorage[localStoreKey]||'{}')||{}
         ,ctxStates  = tryGet(stateRoot, window.location.pathname + window.location.search)    //keyed to url
         ;
     return { 
