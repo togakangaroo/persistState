@@ -1,0 +1,21 @@
+{
+	 "translate_tabs_to_spaces": true
+	,"folders":
+	[
+		{
+			"folder_exclude_patterns":
+			[
+				 ".sass-cache"
+				,"bin"
+				,"obj"
+				,".git"
+				,".hg"
+			]
+			,"file_exclude_patterns":
+			[
+				 "*.sublime-workspace"
+			]
+			,"path": "."
+		}
+	]
+}
