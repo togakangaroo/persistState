@@ -1,6 +1,7 @@
 <html>
 <head>
 	<title>ow.persistState Demo</title>
+	<meta charset="utf-8" />
 	<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/css/base/jquery.ui.all.min.css">
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/dark.min.css">
@@ -18,6 +19,7 @@
 			margin-bottom: 1.5em;
 			border-bottom: 1px solid #CCC;
 		}
+		.examples section { padding-top: 1.5em; }
 	</style>
 </head>
 <body>
@@ -98,6 +100,30 @@
 			<code class="example-html"></code>
 		</div>
 	</li>
+
+	<li class="row-fluid" id="show-hide-example">
+		<section class="span4">
+			<p>
+				Making custom elements and widgets work with persistState is dead simple.
+				See those Show/Hide collapsers? I just implemented them myself, and they persist!
+			</p>
+			<p>
+				Note, the controls do not have to be a jQuery Ui widget so long as it is possible
+				to target them with jQuery selectors. Hint, it's relatively simple to
+				<a href="http://james.padolsey.com/javascript/extending-jquerys-selector-capabilities/">define
+					your own selectors</a>
+			</p>
+			<p>
+				The key is to extend the <code>$.ow.persistState.elementPeristence</code> object and let it
+				know how the object state should be both persisted and restored.
+			</p>
+		</section>
+		<div class="span8">
+			<p>Here is the code:</p>
+			<pre><code class="javascript example"></code></pre>
+		</div>
+	</li>
+
 </ul>
 
 <section id="localStorage-contents" class="row-fluid hero-unit">
@@ -116,7 +142,7 @@
 <script type="text/javascript">
 //Get all the code inserted
 $(function(){
-	$('.examples>li').each(function(i, el){
+	$('.examples>li:has(.example-html)').each(function(i, el){
         var  code = $('section', el).html()
             ,allLines = code.split('\n')
             ,lines = allLines.filter(function(l){return !/\!function()/.test(l) && !/}\(\)/.test(l) }) //remove iife
@@ -127,10 +153,13 @@ $(function(){
 
             ,codeMinusIndentationLevel = lines.map(function(l){ return l.substr(indentationLevel)}).join('\n').trim()
             ;
-		var $code = $('code', el).text( codeMinusIndentationLevel );
+		var $code = $('code.example-html', el).text( codeMinusIndentationLevel );
 		$code.addClass('html').wrap('<pre>'); //for highlight.js
 		hljs.highlightBlock($code[0]);
 	})
+	hljs.highlightBlock(
+		$('#show-hide-example code.example').text( $('#collapsible-widget').html() )[0]
+	);
 })	
 </script>
 
@@ -146,9 +175,40 @@ $(function(){
 })
 </script>
 
-<script type="text/javascript">
-$(function(){
+<style type="text/css">
+	.collapsible .toggle { float: right; }
+	.collapsible .toggle:after { content: " ▲"; }
+	.collapsible.collapsed .toggle:after { content: " ▼"; }
+</style>
+<script type="text/javascript" id="collapsible-widget">//A super-naive implementation of collapsible areas in a jQuery Ui widget
+$.widget('demo.collapsible', { 
+	_create: function() {
+		this.element.wrapInner('<div class="collapsible-area">')
+		this.$toggle = $('<div class="toggle">').text('Show/Hide').prependTo(this.element);
+		this.$toggle.click(this.toggle.bind(this));
+		this.element.addClass('collapsible');
+	}
+	,toggle: function(show) {
+		show = typeof show == 'boolean' ? show : this.element.is('.collapsed');
+		this.element.toggleClass('collapsed', !show);
+		this.element.find('.collapsible-area')[show ? 'slideDown' : 'slideUp']();
+	}
+});
 
+//Let persistState know how to serialize this widget
+$.ow.persistState.elementPersistence[':demo-collapsible'] = {
+    saveState: function($el) {
+        return { collapsed: $el.is('.collapsed') };
+    },
+    restoreState: function($el, state) {
+        if(!state) return;
+        var widget = $el.data('demo-collapsible')
+        widget.toggle(!state.collapsed);
+    }
+};
+$(function(){
+	//initialize the widget and make it persisted
+	$('.examples>li').collapsible().persistState();
 })
 </script>
 
