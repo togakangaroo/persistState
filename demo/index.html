@@ -5,10 +5,6 @@
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/css/base/jquery.ui.all.min.css">
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/dark.min.css">
 	<style type="text/css">
-		code {
-			white-space: pre;
-			display: block;
-		}
 		.examples>li {
 			margin: 1em;
 		}
@@ -17,40 +13,57 @@
 			overflow: hidden;
 		}
 		body { background-color: #FAFAFC;}
+		.separate {
+			padding-bottom: 1em;
+			margin-bottom: 1.5em;
+			border-bottom: 1px solid #CCC;
+		}
 	</style>
 </head>
-<body
+<body>
 
 <div class="container">
-<h1>This is a demo of the jQuery Ui persistState Widget</h1>
-<p>
-	Try playing around with the controls below and refreshing the page. Note that the state of these controls persists.
-</p>
+<h1 class="page-header">The persistState Widget <small>A Demo</small></h1>
+<div class="row-fluid separate">
+	<p class="span8">
+	Try playing around with the controls below and refreshing the page. Note that the state of these controls persists. This page loads jQuery, jQuery Ui, and the persistState widget. It then initializes everything like so:	
+	</p>
+	<div class="span4">
+<pre><code class="javascript">$(function(){
+	$('.persist-state').persistState();
+})</code></pre>		
+	</div>
+</div>
+
 <ul class="examples unstyled">
-	<li>	
-		<section id="checkbox-example">
+	<li class="row-fluid">	
+		<section id="checkbox-example" class="span4">
 			<label>
 				<span class="label">This is a checkbox</span>
 				<input type="checkbox" class="persist-state">
 			</label>
 		</section>
-		<p>This is what the html looks like:</p>
-		<code class="example-html javascript"></code>
+		<div class="span8">
+			<p>This is what the html looks like:</p>
+			<code class="example-html"></code>			
+		</div>
 	</li>
 
-	<li>
-		<section id="input-text-example">
+	<li class="row-fluid">
+		<section id="input-text-example" class="span4">
 			<label>
 				<span class="label">This is text input</span>
 				<input class="persist-state" placeholder="Type some text in here">
 			</label>
 		</section>
-		<p>This is what the html looks like:</p>
-		<code class="example-html"></code>
+		<div class="span8">
+			<p>This is what the html looks like:</p>
+			<code class="example-html"></code>
+		</div>
 	</li>
 
-	<li>
-		<section id="select-example">
+	<li class="row-fluid">
+		<section id="select-example" class="span4">
 			<label>
 				<span class="label">This is a selector</span>
 				<select class="persist-state">
@@ -60,12 +73,14 @@
 				</select>
 			</label>
 		</section>
-		<p>This is what the html looks like:</p>
-		<code class="example-html"></code>
+		<div class="span8">
+			<p>This is what the html looks like:</p>
+			<code class="example-html"></code>
+		</div>
 	</li>
 
-	<li>
-		<section id="resizable-example">
+	<li class="row-fluid">
+		<section id="resizable-example" class="span4">
 			<label>
 				<div class="resizable persist-state">
 					<p>This block is resizable with jQuery Ui resizable</p>
@@ -78,23 +93,28 @@
 				</div>
 			</label>
 		</section>
-		<p>This is what the html looks like:</p>
-		<code class="example-html"></code>
+		<div class="span8">
+			<p>This is what the html looks like:</p>
+			<code class="example-html"></code>
+		</div>
 	</li>
-
-	<section id="localStorage-contents">
-		<p>The following are the contents of persistState in your localStorage:</p>
-		<code></code>
-		<button class="clear-localStorage">Clear It Out</button>
-	</section>
 </ul>
+
+<section id="localStorage-contents" class="row-fluid hero-unit">
+	<p>The following are the contents of persistState in your localStorage:</p>
+	<pre><code class="javascript"></code></pre>
+	<button class="clear-localStorage">Clear It Out</button>
+	<aside>This will remove any unload events so your next refresh will not persist but following ones will.</aside>
+</section>
 </div>
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js"></script>
 <script src="../src/ow.widgets.persistState.js"></script>
+
 <script type="text/javascript">
+//Get all the code inserted
 $(function(){
 	$('.examples>li').each(function(i, el){
         var  code = $('section', el).html()
@@ -113,20 +133,31 @@ $(function(){
 	})
 })	
 </script>
+
 <script type="text/javascript">
+//The localStorage view panel
 $(function(){
-	function calcLocalStorage() {
+	function showLocalStorage() {
 		var code = JSON.stringify( JSON.parse(localStorage['//persistenceState']||'null'), null, 2);
 		$('#localStorage-contents code').text(code);
 	}
-	$('.clear-localStorage').click(function(){ localStorage.clear(); calcLocalStorage(); });
-	calcLocalStorage();
+	$('.clear-localStorage').click(function(){ $(':ow-persistState').persistState('clear'); showLocalStorage(); });
+	showLocalStorage();
 })
 </script>
 
 <script type="text/javascript">
 $(function(){
+
+})
+</script>
+
+<script type="text/javascript">
+$(function(){
+	//initialize jquery ui widgets for the example
 	$('.resizable').resizable();
+	//initialize the persist state widget itself. The widget will attempt
+	//to restore state upon initialization
 	$('.persist-state').persistState();
 })
 </script>
