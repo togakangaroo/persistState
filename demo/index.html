@@ -3,6 +3,7 @@
 	<title>ow.persistState Demo</title>
 	<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/css/base/jquery.ui.all.min.css">
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/dark.min.css">
 	<style type="text/css">
 		code {
 			white-space: pre;
@@ -34,7 +35,7 @@
 			</label>
 		</section>
 		<p>This is what the html looks like:</p>
-		<code class="example-html"></code>
+		<code class="example-html javascript"></code>
 	</li>
 
 	<li>
@@ -91,6 +92,7 @@
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js"></script>
 <script src="../src/ow.widgets.persistState.js"></script>
 <script type="text/javascript">
 $(function(){
@@ -105,7 +107,9 @@ $(function(){
 
             ,codeMinusIndentationLevel = lines.map(function(l){ return l.substr(indentationLevel)}).join('\n').trim()
             ;
-		$('code', el).text( codeMinusIndentationLevel )
+		var $code = $('code', el).text( codeMinusIndentationLevel );
+		$code.addClass('html').wrap('<pre>'); //for highlight.js
+		hljs.highlightBlock($code[0]);
 	})
 })	
 </script>
