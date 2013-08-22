@@ -4,6 +4,8 @@ The persistState widget is a jQuery Ui widget that will transparently save the s
 
 This means that users can configure the controls in their local workspace however they want and it will be restored for them next time they visit the page with no work on your part!
 
+[Demo available here](http://togakangaroo.github.io/persistState/)
+
 The supported control types are easily extensible. 
 
 Simply activate the persistState widget on any elements for which you want to track state.
@@ -36,7 +38,7 @@ All persistState widgets also supply the following methods
 * **key** - Get the key under which this element would be stored. By default calls the internal getPath function, override this function to provide your own getPath implementation (see Persistence Stores area below for more)
 * **persist** - Persist state for this control now
 * **restore** - Restore state of this control now
-* **clear** - Clear all stored state by removing window unlowad events
+* **clear** - Clear all stored state by removing window unload events
 
 
 Extending Supported Controls
