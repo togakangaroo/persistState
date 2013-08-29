@@ -1,0 +1,30 @@
+{
+  "name": "ow.persistState",
+  "version": "1.0.0",
+  "authors": [
+    "George Mauer <gmauer@gmail.com>"
+  ],
+  "description": "jQuery Ui widget to persist state of html controls and widgets accross page refreshes",
+  "main": "src/ow.widgets.persistState.js",
+  "keywords": [
+    "jquery",
+    "jquery-ui",
+    "widget",
+    "persist",
+    "localStorage",
+    "restore"
+  ],
+  "dependencies": {
+    "jquery": ">=1.7.0",
+    "jquery.ui": ">=1.8.0"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/togakangaroo/persistState",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
