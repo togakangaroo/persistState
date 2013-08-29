@@ -25,7 +25,7 @@ Timing
 By default, all controls with the persistState widget will store all supported states when the control raises it's 'change' event or when the window unloads.
 
 All controls tagged with persistState will restore their state on the event loop following when the widget is initialized. This behavior is optional and can be modified by
-passing in an option when initializing the widget of
+passing in an `autoRestore` option when initializing the widget. Valid values are
 
 * true - restore now (do not wait, just do it now)
 * false - do not restore (useful if you want to do it manually)
