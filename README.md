@@ -1,6 +1,8 @@
 persistState Version 1.0.0 is releaed under [MIT License](http://opensource.org/licenses/MIT)
 
-The persistState widget is a jQuery Ui widget that will transparently save the state of checkboxes, inputs, selects, etc in localStorage, restoring these on the user's next visit to the page.
+Do you have a highly-configurable and personizable UI? Ever wish it would persist the positions, selections, sizings, etc of all those widgets the user has configured? Have more important features to work on?
+
+The persistState widget is a jQuery Ui widget that will transparently save the state of checkboxes, inputs, selects, resizable areas, etc in localStorage, restoring these on the user's next visit to the page.
 
 This means that users can configure the controls in their local workspace however they want and it will be restored for them next time they visit the page with no work on your part!
 
@@ -24,8 +26,9 @@ Timing
 ======
 By default, all controls with the persistState widget will store all supported states when the control raises it's 'change' event or when the window unloads.
 
-All controls tagged with persistState will restore their state on the event loop following when the widget is initialized. This behavior is optional and can be modified by
-passing in an `autoRestore` option when initializing the widget. Valid values are
+All controls tagged with persistState will restore their state on the event loop following when the widget is initialized. This allows you to initialize persistState without worrying about other widgets and frameworks creating elements and changing state after the initalization that will not be picked up. 
+
+This causes a slight delay before state is restored. This behavior is optional and can be modified by passing in an `autoRestore` option when initializing the widget. Valid values are
 
 * true - restore now (do not wait, just do it now)
 * false - do not restore (useful if you want to do it manually)
@@ -120,3 +123,16 @@ $.ow.persistState.getStates = function(localStoreKey) {
     function tryGet(obj, key) { return obj.hasOwnProperty(key) ? obj[key] : (obj[key] = {}) }
 }
 ```
+
+FAQ
+======
+
+Q: jQuery has the `:visible` selector. Can I use it to persist whether an element is visible or not.
+
+A: This is not recommended. Consider that `:not(:visible)` will match **all** invisible elements; not only the element you called `$el.hide()` on, but any children in the DOM. Therefore a simple selector like this will not do what you want when restored - explicitly hiding all elements that were previously invisible, not just their parent. Additionally the amount of `:not(:visible)` elements is likely to be quite bad for performance. The recommended approach would be to create your own widget and selector for just the element you want to show/hide. For an example [see the collapsible implementation in the demo](http://togakangaroo.github.io/persistState/).
+
+--------------------
+
+Q: This is a Mercurial repo but on Github? What what what?
+
+A: I prefer Mercurial for it's saner commands and more natural (for me) workflow. I do acknowledge however the awesomeness of github. I therefore use [hg-git](http://hg-git.github.io/) to push hg repositories to github. This does have some disadvantages for example github branches [need to be maintained as hg bookmarks](http://mercurial.selenic.com/wiki/HgGit). It sucks but it works for now.
