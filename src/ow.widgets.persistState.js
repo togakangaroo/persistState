@@ -36,11 +36,12 @@ $.widget('ow.persistState', {
     options: {
         //Should all controls be restored by default when this control is generated.
         //true - restore now, false - do not restore, 'defer' - restore in a bit (default)
-         autoRestore:   'defer'                    
+         autoRestore:   'defer',
+         persistenceKey: window.location.pathname + window.location.search //keyed to url by default
     }
 
     ,_create: function() {
-        this.localStoreKey = '//persistenceState';
+        this.persistenceKey = '//persistenceState';
 
         var  restore = bind(this.restore, this);
         this.options.autoRestore === true && restore();
@@ -76,14 +77,14 @@ $.widget('ow.persistState', {
     }
 
     ,_restore: function(serializer) {
-        var  element     = $.ow.persistState.getStates( this.localStoreKey ).getState( this.key() )
+        var  element     = $.ow.persistState.getStates( this.persistenceKey, this.options.persistenceKey ).getState( this.key() )
             ;
         if(element.hasOwnProperty(serializer.selector))
             serializer.restoreState(this.element, element[serializer.selector]);
     }
 
     ,_save: function(serializer) {
-        var  states     = $.ow.persistState.getStates( this.localStoreKey )
+        var  states     = $.ow.persistState.getStates( this.persistenceKey, this.options.persistenceKey )
             ,element    = states.getState( this.key() )
             ;
             element[serializer.selector] = serializer.saveState(this.element);
@@ -91,7 +92,7 @@ $.widget('ow.persistState', {
     }
 
     ,_clear: function(serializer) {
-        var  states     = $.ow.persistState.getStates( this.localStoreKey )
+        var  states     = $.ow.persistState.getStates( this.persistenceKey, this.options.persistenceKey )
             ,element    = states.getState( this.key() )
             ;
             this._setupAutoPersistence('off');
@@ -112,14 +113,14 @@ $.widget('ow.persistState', {
 
 //How the state object for each control is stored. 
 //Default implementation is localStorage keyed by url. Overwrite this object to use a different state persistence mechanism.
-$.ow.persistState.getStates = function(localStoreKey) {
-    var  stateRoot  = JSON.parse(localStorage[localStoreKey]||'{}')||{}
-        ,ctxStates  = tryGet(stateRoot, window.location.pathname + window.location.search)    //keyed to url
+$.ow.persistState.getStates = function(persistenceKey, path) {
+    var  stateRoot  = JSON.parse(localStorage[persistenceKey]||'{}')||{}
+        ,ctxStates  = tryGet(stateRoot, path)      
         ;
     return { 
          getState: function(key) { return tryGet(ctxStates, key) }
         ,save: function(){ 
-            localStorage[localStoreKey] = JSON.stringify(stateRoot)
+            localStorage[persistenceKey] = JSON.stringify(stateRoot)
         }
     };
 
