@@ -1,4 +1,4 @@
-persistState Version 1.0.0 is releaed under [MIT License](http://opensource.org/licenses/MIT)
+persistState Version 1.1.0 is releaed under [MIT License](http://opensource.org/licenses/MIT)
 
 Do you have a highly-configurable and personizable UI? Ever wish it would persist the positions, selections, sizings, etc of all those widgets the user has configured? Have more important features to work on?
 
@@ -102,21 +102,21 @@ This has a few limitations
 * On highly dynamic page where order and location of elements changes frequently the child paths will not be a reliable selector
 * Control state is only saved/restored in this particular browser on this particular PC
 
-The first issue could be solved by giving all locally persisted elements unique id attributes. You can also address these by implementing your own storage
-mechanism. To do so overwrite the `$.ow.persistState.getStates` function to return an object. For example, here is the default implementation:
+The first issue could be solved by giving all locally persisted elements unique id attributes. If you want multiple urls to share the same storage you can override the `persistenceKey` option on the widget. By default the key is the current url+querystring but by providing a different one (say just base url) you can persist state accross multiple similarly structured pages.
+
+
+Alternately, you can also address these by implementing your own storage mechanism. To do so overwrite the `$.ow.persistState.getStates` function to return an object. For example, here is the default implementation:
 
 ```javascript
 //Return an object that lets you operate on persisted state
-$.ow.persistState.getStates = function(localStoreKey) {
-    var  stateRoot  = JSON.parse(localStorage[localStoreKey]||'{}')||{}
-        ,ctxStates  = tryGet(stateRoot, window.location.pathname + window.location.search)    //keyed to url
+$.ow.persistState.getStates = function(persistenceKey, path) {
+    var  stateRoot  = JSON.parse(localStorage[persistenceKey]||'{}')||{}
+        ,ctxStates  = tryGet(stateRoot, path)      
         ;
     return { 
-    	//get the state for a particular storage key (from elementPersistence)
-         getState: function(key) { return tryGet(ctxStates, key) }  
-         //save all the current states
+         getState: function(key) { return tryGet(ctxStates, key) }
         ,save: function(){ 
-            localStorage[localStoreKey] = JSON.stringify(stateRoot)
+            localStorage[persistenceKey] = JSON.stringify(stateRoot)
         }
     };
 
